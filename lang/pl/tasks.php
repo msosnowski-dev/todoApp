@@ -15,4 +15,7 @@ return [
     'In progress'               => 'W trakcie',
     'Done'                      => 'Wykonane',
     'Deadline for completion'   => 'Termin wykonania',
+    'Filtration panel'   => 'Panel filtracji',
+    'Filter results'   => 'Filtruj wyniki',
+    'Clear all filters'   => 'Wyczyść wszystkie filtry',
 ];
