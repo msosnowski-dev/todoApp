@@ -4,6 +4,7 @@ return [
     'to-do list'                => 'Lista zadań',
     'Add new task'              => 'Dodaj nowe zadanie',
     'Create task'               => 'Utwórz zadanie',
+    'Edit task'                 => 'Edycja zadania',
     'Task title'                => 'Tytuł zadania',
     'Task description'          => 'Opis zadania',
     'Priority'                  => 'Priorytet',
@@ -18,4 +19,5 @@ return [
     'Filtration panel'   => 'Panel filtracji',
     'Filter results'   => 'Filtruj wyniki',
     'Clear all filters'   => 'Wyczyść wszystkie filtry',
+    'Back to To Do List'   => 'Wróć do listy zadań',
 ];

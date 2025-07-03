@@ -1,8 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('tasks.Create task') }}
-        </h2>
+        <div class="flex justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight max-w-xl">
+                @if(isset($task->id))
+                    {{ __('tasks.Edit task') }}: {{ $task->title }} [{{ __('Id').': '.$task->id }}]
+                @else
+                    {{ __('tasks.Create task') }}
+                @endif
+            </h2>
+            <div class="max-w-xl">
+                <a class="text-black py-2 px-4 rounded transition duration-200" href="{{ route('tasks.index')}}">
+                    <span class="mdi mdi-arrow-left-thin"></span> {{ __('tasks.Back to To Do List') }}
+                </a>
+            </div>
+        </div>
     </x-slot>
 
     <form method="POST" action="{{ isset($task) ? route('tasks.update', $task) : route('tasks.store') }}">
