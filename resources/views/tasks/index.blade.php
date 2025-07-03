@@ -6,7 +6,7 @@
             </h2>
             <div class="max-w-xl">
                 <a class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-200" href="{{ route('tasks.create')}}">
-                        {{ __('tasks.Add new task') }}
+                    {{ __('tasks.Add new task') }}
                 </a>
             </div>
         </div>
@@ -77,7 +77,7 @@
                                         <input name="due_date" type="date" value="{{ request('due_date') }}"/>
                                     </td>
                                     <td class="px-6 py-4 text-right">
-                                        <button  type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-200" value="true">
+                                        <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-200" value="true">
                                             {{ __('tasks.Filter results') }}
                                         </button>
                                         <a href="{{ route('tasks.index') }}" class="mdi mdi-close text-sm text-gray-600 underline d-block mt-2">
@@ -106,7 +106,7 @@
                                         <td class="px-6 py-4 text-right">
                                             <div class="">
                                                 <a href="{{ route('tasks.edit', $task->id) }}" class="mdi mdi-text-box-edit-outline text-blue-500 hover:underline mr-2">{{ __('Edit') }}</a>
-                                                <span class="mdi mdi-eye-outline hover:underline mr-2">{{ __('Preview') }}</span> 
+                                                <a href="{{ route('tasks.show', $task->id) }}" class="mdi mdi-eye-outline hover:underline mr-2">{{ __('Preview') }}</a> 
                                                 <span class="mdi mdi-trash-can-outline text-red-500 hover:underline">
                                                     <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="d-inline">
                                                         @csrf

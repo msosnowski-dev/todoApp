@@ -20,4 +20,5 @@ return [
     'Filter results'   => 'Filtruj wyniki',
     'Clear all filters'   => 'Wyczyść wszystkie filtry',
     'Back to To Do List'   => 'Wróć do listy zadań',
+    'Task details'   => 'Szczegóły zadania',
 ];
