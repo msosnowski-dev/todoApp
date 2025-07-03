@@ -89,7 +89,17 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
+        if(request()->user()->cannot('delete', $task)) {
+            abort(403);
+        }
+        $task->delete();
 
+        // WYkryj ajax
+        if (request()->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()->route('tasks.index')->with('success', 'Zadanie zostało usunięte.'); 
     }
 
     private function validateTask(Request $request): array

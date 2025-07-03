@@ -104,9 +104,21 @@
                                             {{ $task->due_date }}
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            <a href="{{ route('tasks.edit', $task->id) }}" class="mdi mdi-text-box-edit-outline text-blue-500 hover:underline mr-2"> {{ __('Edit') }}</a>
-                                            <span class="mdi mdi-eye-outline hover:underline mr-2"> {{ __('Preview') }}</span> 
-                                            <span class="mdi mdi-trash-can-outline text-red-500 hover:underline"> {{ __('Delete') }}</span>
+                                            <div class="">
+                                                <a href="{{ route('tasks.edit', $task->id) }}" class="mdi mdi-text-box-edit-outline text-blue-500 hover:underline mr-2">{{ __('Edit') }}</a>
+                                                <span class="mdi mdi-eye-outline hover:underline mr-2">{{ __('Preview') }}</span> 
+                                                <span class="mdi mdi-trash-can-outline text-red-500 hover:underline">
+                                                    <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit">{{ __('Delete') }}</button>
+                                                    </form>
+                                                </span>
+                                            </div>
+                                            <div class="mt-2">
+                                                <button class="mdi mdi-trash-can-outline text-red-500 hover:underline delete-task" data-id="{{ $task->id }}">{{ __('Delete') }} [Ajax]</button>
+                                            </div>
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -125,4 +137,21 @@
         </div>
 
     </div>
+
+    <script>
+        document.querySelectorAll('.delete-task').forEach(btn => {
+            btn.addEventListener('click', function () {
+                if (!confirm('Na pewno usunąć zadanie?')) return;
+
+                const taskId = this.dataset.id;
+
+                axios.delete(`/tasks/${taskId}`)
+                .then(response => {
+                    if (response.status === 200) {
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
