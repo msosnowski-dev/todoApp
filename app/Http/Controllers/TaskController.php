@@ -12,7 +12,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-
+        $tasks = Task::where('user_id', auth()->id())->latest()->get();
+        return view('tasks.index', compact('tasks'));
     }
 
     /**
@@ -47,7 +48,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        if (request()->user()->cannot('edit', $task)) {
+        if(request()->user()->cannot('edit', $task)) {
             abort(403);
         }
         return view('tasks.form', compact('task'));
@@ -58,7 +59,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        if ($request->user()->cannot('update', $task)) {
+        if($request->user()->cannot('update', $task)) {
             abort(403);
         }
         $validated = $this->validateTask($request);
