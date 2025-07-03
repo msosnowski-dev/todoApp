@@ -20,6 +20,7 @@ class TaskController extends Controller
      */
     public function create()
     {
+        return view('tasks.form');
     }
 
     /**
@@ -27,7 +28,10 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $this->validateTask($request);
+        $request->user()->tasks()->create($validated);
 
+        return redirect()->route('tasks.index')->with('success', 'Zadanie zostało dodane.');
     }
 
     /**
@@ -43,7 +47,10 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-
+        if (request()->user()->cannot('edit', $task)) {
+            abort(403);
+        }
+        return view('tasks.form', compact('task'));
     }
 
     /**
@@ -51,7 +58,12 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-
+        if ($request->user()->cannot('update', $task)) {
+            abort(403);
+        }
+        $validated = $this->validateTask($request);
+        $task->update($validated);
+        return redirect()->route('tasks.index')->with('success', 'Zadanie zostało zaktualizowane.');
     }
 
     /**
@@ -60,5 +72,16 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
 
+    }
+
+    private function validateTask(Request $request): array
+    {
+        return $request->validate([
+            'title' => 'bail|required|max:255',
+            'description' => 'nullable',
+            'priority' => 'required|in:low,medium,high',
+            'status' => 'required|in:to-do,in-progress,done',
+            'due_date' => 'required|date|date_format:d.m.Y',
+        ]);
     }
 }
