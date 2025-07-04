@@ -100,6 +100,7 @@ class TaskController extends Controller
 
         // WYkryj ajax
         if (request()->wantsJson()) {
+            session()->flash('success', 'Zadanie zostało usunięte.');
             return response()->json(['success' => true]);
         }
 
