@@ -87,7 +87,9 @@ class TaskController extends Controller
 
         $task->load('currentVersion');
 
-        return view('tasks.show', compact('task', 'token'));
+        $taskHistory = $this->taskHistory($task);
+
+        return view('tasks.show', compact('task', 'token', 'taskHistory'));
     }
 
     /**
@@ -225,5 +227,11 @@ class TaskController extends Controller
         $task->save();
 
         return redirect()->back()->with('success', __('tasks.The task has been removed from Google Calendar'));
+    }
+
+    //Historia wersji danego zadania
+    public function taskHistory(Task $task)
+    {
+        return $task->versions()->latest()->get();
     }
 }

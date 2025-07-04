@@ -39,4 +39,6 @@ return [
     'Create a calendar task'    => 'Utwórz zadanie w kalendarzu',
     'The task has been attached to the Google Calendar'    => 'Zadanie zostało podpięte do kalendarza Google',
     'The task has been removed from Google Calendar'    => 'Zadanie zostało usunięte z kalendarza Google',
+    'Change history'            => 'Historia zmian',
+    'Created at'                => 'Data utworzenia',
 ];
