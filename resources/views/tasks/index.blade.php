@@ -22,7 +22,6 @@
                         {{ session('success') }}
                     </div>
                 @endif
-                <form method="GET" action="{{ route('tasks.index') }}" class="">
 
                     <div class="relative overflow-x-auto w-full">
                         <table class="w-full text-sm text-left rtl:text-right">
@@ -50,42 +49,45 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                    <td class="px-6 py-4"></td>
-                                    <td class="px-6 py-4">{{ __('tasks.Filtration panel') }}</td>
-                                    <td class="px-6 py-4 text-right">
-                                        <select id="status" name="priority" class="form-control">
-                                            <option value="">{{ __('Select') }}...</option>
-                                            @foreach (\App\Models\Task::priorities() as $key => $label)
-                                                <option value="{{ $key }}" {{ request('priority') === $key ? 'selected' : '' }}>
-                                                    {{ $label }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        <select id="status" name="status" class="form-control">
-                                            <option value="">{{ __('Select') }}...</option>
-                                            @foreach (\App\Models\Task::statuses() as $key => $label)
-                                                <option value="{{ $key }}" {{ request('status') === $key ? 'selected' : '' }}>
-                                                    {{ $label }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        <input name="due_date" type="date" value="{{ request('due_date') }}"/>
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-200" value="true">
-                                            {{ __('tasks.Filter results') }}
-                                        </button>
-                                        <a href="{{ route('tasks.index') }}" class="mdi mdi-close text-sm text-gray-600 underline d-block mt-2">
-                                            {{ __('tasks.Clear all filters') }}
-                                        </a>
-                                    </td>
+                                <form method="GET" action="{{ route('tasks.index') }}" class="">
+                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                                        <td class="px-6 py-4"></td>
+                                        <td class="px-6 py-4">{{ __('tasks.Filtration panel') }}</td>
+                                        <td class="px-6 py-4 text-right">
+                                            <select id="status" name="priority" class="form-control">
+                                                <option value="">{{ __('Select') }}...</option>
+                                                @foreach (\App\Models\Task::priorities() as $key => $label)
+                                                    <option value="{{ $key }}" {{ request('priority') === $key ? 'selected' : '' }}>
+                                                        {{ $label }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <select id="status" name="status" class="form-control">
+                                                <option value="">{{ __('Select') }}...</option>
+                                                @foreach (\App\Models\Task::statuses() as $key => $label)
+                                                    <option value="{{ $key }}" {{ request('status') === $key ? 'selected' : '' }}>
+                                                        {{ $label }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <input name="due_date" type="date" value="{{ request('due_date') }}"/>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-200" value="true">
+                                                {{ __('tasks.Filter results') }}
+                                            </button>
+                                            <a href="{{ route('tasks.index') }}" class="mdi mdi-close text-sm text-gray-600 underline d-block mt-2">
+                                                {{ __('tasks.Clear all filters') }}
+                                            </a>
+                                        </td>
 
-                                </tr>
+                                    </tr>
+                                </form>
+
                                 @foreach($tasks as $task)
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                                         <th class="px-6 py-4 text-right">
@@ -132,7 +134,6 @@
 
                     </div>
 
-                </form>
             </div>
         </div>
 
