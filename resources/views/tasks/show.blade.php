@@ -16,6 +16,11 @@
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}</a>
+                    </div>
+                @endif
                 @if(session('link'))
                     <div class="alert alert-success">
                         {{ __('tasks.Public link has been generated') }}: <a href="{{ session('link') }}" >{{ session('link') }}</a>
@@ -27,7 +32,27 @@
                     <div class="mt-3">
                         <div class="text-right">
                             @if(!$token)
-                                <a href="{{ route('task.generate-url', $task->id) }}" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-200"><span class="mdi mdi-share-variant-outline"></span> {{ __('tasks.Share') }}</a>
+                                <div class="flex justify-content-end">
+                                    @if($task->google_event_id)
+                                        <form action="{{ route('task.delete-google-calendar-event', $task->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="bg-red-600 text-white font-semibold py-2 px-4 rounded hover:bg-red-700 transition duration-200">
+                                                <span class="mdi mdi-calendar-month-outline"></span> {{ __('tasks.Delete task from calendar') }}
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('task.send-task-google-calendar', $task->id) }}" method="POST">
+                                            @csrf
+                                            <button class="bg-green-600 text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition duration-200">
+                                                <span class="mdi mdi-calendar-month-outline"></span> {{ __('tasks.Create a calendar task') }}
+                                            </button>
+                                        </form>
+                                    @endif
+                                    <a href="{{ route('task.generate-url', $task->id) }}" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-200 ms-3">
+                                        <span class="mdi mdi-share-variant-outline"></span> {{ __('tasks.Share') }}
+                                    </a>
+                                </div>
                             @else
                                 <span class="pe-3">{{ __('tasks.Owner') }}: {{$task->user->name}}</span>
                                 <span class="bg-gray-100 text-gray-600 font-semibold py-2 px-4 rounded"><span class="mdi mdi-earth"></span> {{ __('tasks.Task shared') }} </span>

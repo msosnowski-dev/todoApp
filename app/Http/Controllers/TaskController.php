@@ -7,6 +7,7 @@ use App\Models\PublicTaskToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Spatie\GoogleCalendar\Event;
 
 class TaskController extends Controller
 {
@@ -99,8 +100,22 @@ class TaskController extends Controller
         if($request->user()->cannot('update', $task)) {
             abort(403);
         }
+
         $validated = $this->validateTask($request);
         $task->update($validated);
+
+        //Edycja danych wydarzenia w kalendarzu Google
+        if($task->google_event_id) {
+            $event = Event::find($task->google_event_id);
+            $event->name = config('app.name').': '.$task->title;
+            $event->description = $task->description;
+            $event->startDateTime = Carbon::parse($task->due_date)->startOfDay();
+            $event->endDateTime = Carbon::parse($task->due_date)->endOfDay();
+
+            $event->save();
+
+        }
+
         return redirect()->route('tasks.index')->with('success', __('tasks.The task has been updated.'));
     }
 
@@ -113,6 +128,14 @@ class TaskController extends Controller
             abort(403);
         }
         $task->delete();
+
+        //usunięcie wydarznie z kalendarza Google
+        if($task->google_event_id) {
+            $event = new Event;
+
+            $event = Event::find($task->google_event_id);
+            $event->delete();
+        }
 
         // Wykryj ajax
         if (request()->wantsJson()) {
@@ -146,5 +169,44 @@ class TaskController extends Controller
         ]);
 
         return redirect()->back()->with('link', route('task.show-public', $token->token));
+    }
+
+    public function sendTaskToGoogleCalendar(Task $task)
+    {
+        if(request()->user()->cannot('view', $task)) {
+            abort(403);
+        }
+
+        //wysłanie danych zadania do kalendarza Google
+        $event = new Event;
+
+        $event->name = config('app.name').': '.$task->title;
+        $event->description = $task->description;
+        $event->startDateTime = Carbon::parse($task->due_date)->startOfDay();
+        $event->endDateTime = Carbon::parse($task->due_date)->endOfDay();
+
+        $googleEvent = $event->save();
+       
+        //zapis id wydarzenia google do zadania
+        $task->google_event_id = $googleEvent->id;
+        $task->save();
+
+        return redirect()->back()->with('success', __('tasks.The task has been attached to the Google Calendar'));
+    }
+
+    public function deleteGoogleCalendarEvent(Task $task)
+    {
+
+        //usunięcie wydarznie z kalendarza Google
+        $event = new Event;
+
+        $event = Event::find($task->google_event_id);
+        $event->delete();
+       
+        //usuniecie id wydarzenia google w zadaniu
+        $task->google_event_id = NULL;
+        $task->save();
+
+        return redirect()->back()->with('success', __('tasks.The task has been removed from Google Calendar'));
     }
 }

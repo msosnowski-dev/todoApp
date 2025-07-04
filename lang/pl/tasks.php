@@ -35,4 +35,8 @@ return [
     'Owner'                     => 'Właściciel',
     'the deadline is approaching!'   => 'zbliża się do terminu!',
     'task'                      => 'zadanie',
+    'Delete task from calendar' => 'Usuń zadanie z kalendarza',
+    'Create a calendar task'    => 'Utwórz zadanie w kalendarzu',
+    'The task has been attached to the Google Calendar'    => 'Zadanie zostało podpięte do kalendarza Google',
+    'The task has been removed from Google Calendar'    => 'Zadanie zostało usunięte z kalendarza Google',
 ];
