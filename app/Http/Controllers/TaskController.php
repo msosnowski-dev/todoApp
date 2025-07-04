@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\PublicTaskToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class TaskController extends Controller
 {
@@ -57,11 +60,24 @@ class TaskController extends Controller
      */
     public function show(Task $task, Request $request)
     {
-        if(request()->user()->cannot('view', $task)) {
-            abort(403);
+        if($request->token) {
+            $token = PublicTaskToken::where('token', $request->token)
+                ->where('expires_at', '>', now())
+                ->first();
+
+            if(!$token) abort(403);
+
+            $task = $token->task;
+            
+        } else {
+            if(request()->user()->cannot('view', $task)) {
+                abort(403);
+            }
+
+            $token = null;
         }
 
-        return view('tasks.show', compact('task'));
+        return view('tasks.show', compact('task', 'token'));
     }
 
     /**
@@ -98,7 +114,7 @@ class TaskController extends Controller
         }
         $task->delete();
 
-        // WYkryj ajax
+        // Wykryj ajax
         if (request()->wantsJson()) {
             session()->flash('success', 'Zadanie zostało usunięte.');
             return response()->json(['success' => true]);
@@ -116,5 +132,19 @@ class TaskController extends Controller
             'status' => 'required|in:to-do,in-progress,done',
             'due_date' => 'required|date|date_format:d.m.Y',
         ]);
+    }
+
+    public function generatePublicUrl(Task $task)
+    {
+        if(request()->user()->cannot('view', $task)) {
+            abort(403);
+        }
+
+        $token = $task->publicTokens()->create([
+            'token' => Str::random(40),
+            'expires_at' => Carbon::now()->addHour(),
+        ]);
+
+        return redirect()->back()->with('link', route('task.show-public', $token->token));
     }
 }

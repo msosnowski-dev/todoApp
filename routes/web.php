@@ -18,6 +18,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('tasks', TaskController::class);
+    Route::get('/task/{task}/generate-url', [TaskController::class, 'generatePublicUrl'])->name('task.generate-url');
+    Route::get('/task/{token}', [TaskController::class, 'show'])->name('task.show-public');
 
 });
 

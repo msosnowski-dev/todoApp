@@ -54,4 +54,9 @@ class Task extends Model
     {
         return $value ? Carbon::parse($value)->format('d.m.Y') : null;
     }
+
+    public function publicTokens()
+    {
+        return $this->hasMany(PublicTaskToken::class);
+    }
 }
