@@ -32,5 +32,7 @@ return [
     'Share'                     => 'Udostępnij',
     'Public link has been generated'=> 'Link publiczny został wygenerowany',
     'Task shared'               => 'Zadanie udostępnione',
-    'Owner'                    => 'Właściciel',
+    'Owner'                     => 'Właściciel',
+    'the deadline is approaching!'   => 'zbliża się do terminu!',
+    'task'                      => 'zadanie',
 ];
