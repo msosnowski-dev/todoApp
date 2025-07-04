@@ -26,4 +26,7 @@ return [
     'You have a task'           => 'Masz zadanie',
     'to be done tomorrow'       => 'do wykonania jutro',
     'View task'                 => 'Zobacz zadanie',
+    'The task has been added.'      => 'Zadanie zostało dodane.',
+    'The task has been updated.'    => 'Zadanie zostało zaktualizowane.',
+    'The task has been deleted.'    => 'Zadanie zostało usunięte.',
 ];

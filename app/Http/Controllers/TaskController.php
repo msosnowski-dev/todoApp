@@ -52,7 +52,7 @@ class TaskController extends Controller
         $validated = $this->validateTask($request);
         $request->user()->tasks()->create($validated);
 
-        return redirect()->route('tasks.index')->with('success', 'Zadanie zostało dodane.');
+        return redirect()->route('tasks.index')->with('success', __('tasks.The task has been added.'));
     }
 
     /**
@@ -101,7 +101,7 @@ class TaskController extends Controller
         }
         $validated = $this->validateTask($request);
         $task->update($validated);
-        return redirect()->route('tasks.index')->with('success', 'Zadanie zostało zaktualizowane.');
+        return redirect()->route('tasks.index')->with('success', __('tasks.The task has been updated.'));
     }
 
     /**
@@ -116,11 +116,11 @@ class TaskController extends Controller
 
         // Wykryj ajax
         if (request()->wantsJson()) {
-            session()->flash('success', 'Zadanie zostało usunięte.');
+            session()->flash('success', __('tasks.The task has been deleted.'));
             return response()->json(['success' => true]);
         }
 
-        return redirect()->route('tasks.index')->with('success', 'Zadanie zostało usunięte.'); 
+        return redirect()->route('tasks.index')->with('success', __('tasks.The task has been deleted.')); 
     }
 
     private function validateTask(Request $request): array
