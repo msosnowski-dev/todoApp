@@ -5,24 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use Carbon\Carbon;
-
 class Task extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'title',
-        'description',
-        'priority',
-        'status',
-        'due_date',
-        'google_event_id',
-    ];
-
-    protected $casts = [
-        'due_date' => 'date',
+        'current_version_id'
     ];
 
     public static function priorities(): array
@@ -51,13 +40,18 @@ class Task extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getDueDateAttribute($value)
-    {
-        return $value ? Carbon::parse($value)->format('d.m.Y') : null;
-    }
-
     public function publicTokens()
     {
         return $this->hasMany(PublicTaskToken::class);
+    }
+
+    public function currentVersion()
+    {
+        return $this->belongsTo(TaskVersion::class, 'current_version_id');
+    }
+
+    public function versions()
+    {
+        return $this->hasMany(TaskVersion::class);
     }
 }

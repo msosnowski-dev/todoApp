@@ -94,16 +94,16 @@
                                             {{ $task->id }}.
                                         </th>
                                         <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                            <a href="{{ route('tasks.edit', $task->id) }}" class="text-blue-500 hover:underline mr-2">{{ $task->title }}</a>
+                                            <a href="{{ route('tasks.edit', $task->id) }}" class="text-blue-500 hover:underline mr-2">{{ $task->currentVersion->title }}</a>
                                         </th>
                                         <td class="px-6 py-4 text-center">
-                                            {{ \App\Models\Task::priorities()[$task->priority] }}
+                                            {{ \App\Models\Task::priorities()[$task->currentVersion->priority] }}
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            {{ \App\Models\Task::statuses()[$task->status] }}
+                                            {{ \App\Models\Task::statuses()[$task->currentVersion->status] }}
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            {{ $task->due_date }}
+                                            {{ $task->currentVersion->due_date }}
                                         </td>
                                         <td class="px-6 py-4 text-right">
                                             <div class="">

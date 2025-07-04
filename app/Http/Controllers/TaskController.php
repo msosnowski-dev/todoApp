@@ -16,7 +16,7 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Task::where('user_id', auth()->id());
+        $query = Task::with('currentVersion')->where('user_id', auth()->id());
 
         // Filtrowanie
         if ($request->filled('priority')) {
@@ -51,7 +51,14 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $validated = $this->validateTask($request);
-        $request->user()->tasks()->create($validated);
+
+        $task = Task::create(['user_id' => auth()->id()]);
+
+        // Tworzymy pierwszą wersję
+        $version = $task->versions()->create($validated);
+
+        // Aktualizujemy task, by wskazywał na aktualną wersję
+        $task->update(['current_version_id' => $version->id]);
 
         return redirect()->route('tasks.index')->with('success', __('tasks.The task has been added.'));
     }
@@ -78,6 +85,8 @@ class TaskController extends Controller
             $token = null;
         }
 
+        $task->load('currentVersion');
+
         return view('tasks.show', compact('task', 'token'));
     }
 
@@ -89,6 +98,9 @@ class TaskController extends Controller
         if(request()->user()->cannot('edit', $task)) {
             abort(403);
         }
+
+        $task->load('currentVersion');
+
         return view('tasks.form', compact('task'));
     }
 
@@ -102,15 +114,18 @@ class TaskController extends Controller
         }
 
         $validated = $this->validateTask($request);
-        $task->update($validated);
+
+        $version = $task->versions()->create($validated);
+
+        $task->update(['current_version_id' => $version->id]);
 
         //Edycja danych wydarzenia w kalendarzu Google
         if($task->google_event_id) {
             $event = Event::find($task->google_event_id);
-            $event->name = config('app.name').': '.$task->title;
-            $event->description = $task->description;
-            $event->startDateTime = Carbon::parse($task->due_date)->startOfDay();
-            $event->endDateTime = Carbon::parse($task->due_date)->endOfDay();
+            $event->name = config('app.name').': '.$version->title;
+            $event->description = $version->description;
+            $event->startDateTime = Carbon::parse($version->due_date)->startOfDay();
+            $event->endDateTime = Carbon::parse($version->due_date)->endOfDay();
 
             $event->save();
 
@@ -177,13 +192,15 @@ class TaskController extends Controller
             abort(403);
         }
 
+        $task->load('currentVersion');
+
         //wysłanie danych zadania do kalendarza Google
         $event = new Event;
 
-        $event->name = config('app.name').': '.$task->title;
-        $event->description = $task->description;
-        $event->startDateTime = Carbon::parse($task->due_date)->startOfDay();
-        $event->endDateTime = Carbon::parse($task->due_date)->endOfDay();
+        $event->name = config('app.name').': '.$task->currentVersion->title;
+        $event->description = $task->currentVersion->description;
+        $event->startDateTime = Carbon::parse($task->currentVersion->due_date)->startOfDay();
+        $event->endDateTime = Carbon::parse($task->currentVersion->due_date)->endOfDay();
 
         $googleEvent = $event->save();
        
