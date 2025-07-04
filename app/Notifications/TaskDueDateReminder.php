@@ -38,9 +38,9 @@ class TaskDueDateReminder extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('Przypomnienie: Zadanie do wykonania jutro.')
-                    ->action('Masz zadanie "' . $this->task->title . '" do wykonania jutro.', config('app.url').'/tasks/' . $this->task->id)
-                    ->line('Zobacz zadanie.');
+                    ->line(__('tasks.Reminder').': '.__('tasks.Task to do tomorrow'))
+                    ->action(__('tasks.You have a task').' "' . $this->task->title . '" '.__('tasks.to be done tomorrow').'.', config('app.url').'/tasks/' . $this->task->id)
+                    ->line(__('tasks.View task'));
     }
 
     /**
