@@ -18,7 +18,7 @@
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 @if(session('link'))
                     <div class="alert alert-success">
-                        Link publiczny został wygenerowany: <a href="{{ session('link') }}" >{{ session('link') }}</a>
+                        {{ __('tasks.Public link has been generated') }}: <a href="{{ session('link') }}" >{{ session('link') }}</a>
                     </div>
                 @endif
 
@@ -27,10 +27,10 @@
                     <div class="mt-3">
                         <div class="text-right">
                             @if(!$token)
-                                <a href="{{ route('task.generate-url', $task->id) }}" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-200"><span class="mdi mdi-share-variant-outline"></span> Udostępnij</a>
+                                <a href="{{ route('task.generate-url', $task->id) }}" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-200"><span class="mdi mdi-share-variant-outline"></span> {{ __('tasks.Share') }}</a>
                             @else
-                                <span class="pe-3">Autor: {{$task->user->name}}</span>
-                                <span class="bg-gray-100 text-gray-600 font-semibold py-2 px-4 rounded"><span class="mdi mdi-earth"></span> Zadanie udostępnione</span>
+                                <span class="pe-3">{{ __('tasks.Owner') }}: {{$task->user->name}}</span>
+                                <span class="bg-gray-100 text-gray-600 font-semibold py-2 px-4 rounded"><span class="mdi mdi-earth"></span> {{ __('tasks.Task shared') }} </span>
                                 
                             @endif
                         </div>

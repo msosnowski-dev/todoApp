@@ -29,4 +29,8 @@ return [
     'The task has been added.'      => 'Zadanie zostało dodane.',
     'The task has been updated.'    => 'Zadanie zostało zaktualizowane.',
     'The task has been deleted.'    => 'Zadanie zostało usunięte.',
+    'Share'                     => 'Udostępnij',
+    'Public link has been generated'=> 'Link publiczny został wygenerowany',
+    'Task shared'               => 'Zadanie udostępnione',
+    'Owner'                    => 'Właściciel',
 ];
