@@ -28,6 +28,11 @@
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
+            @if($user->tokens())
+                <x-input-label for="token" :value="__('Token')" class="mt-3" />
+                <x-text-input id="token" name="token" type="text" class="mt-1 block w-full" :value="session('api-token')" disabled />
+            @endif
+
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div>
                     <p class="text-sm mt-2 text-gray-800">
