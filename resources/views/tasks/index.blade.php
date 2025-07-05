@@ -50,6 +50,7 @@
                             </thead>
                             <tbody>
                                 <form method="GET" action="{{ route('tasks.index') }}" class="">
+                                    @csrf
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                                         <td class="px-6 py-4"></td>
                                         <td class="px-6 py-4">{{ __('tasks.Filtration panel') }}</td>
