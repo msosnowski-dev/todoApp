@@ -41,4 +41,5 @@ return [
     'The task has been removed from Google Calendar'    => 'Zadanie zostało usunięte z kalendarza Google',
     'Change history'            => 'Historia zmian',
     'Created at'                => 'Data utworzenia',
+    'Google Calendar credentials file is missing.'                => 'Brakuje pliku z poświadczeniami Google Calendar.',
 ];

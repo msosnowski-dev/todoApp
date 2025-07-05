@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\GoogleCalendarController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/tasks');
@@ -19,8 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('tasks', TaskController::class);
     Route::get('/task/{task}/generate-url', [TaskController::class, 'generatePublicUrl'])->name('task.generate-url');
     Route::get('/task/{token}', [TaskController::class, 'show'])->name('task.show-public');
-    Route::post('/task/{task}/send-task-google-calendar', [TaskController::class, 'sendTaskToGoogleCalendar'])->name('task.send-task-google-calendar');
-    Route::delete('/task/{task}/delete-google-calendar-event', [TaskController::class, 'deleteGoogleCalendarEvent'])->name('task.delete-google-calendar-event');
+    Route::post('/task/{task}/send-task-google-calendar', [GoogleCalendarController::class, 'sendTaskToGoogleCalendar'])->name('task.send-task-google-calendar');
+    Route::delete('/task/{task}/delete-google-calendar-event', [GoogleCalendarController::class, 'deleteGoogleCalendarEvent'])->name('task.delete-google-calendar-event');
 
 });
 

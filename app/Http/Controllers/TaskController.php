@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\PublicTaskToken;
+use App\Services\GoogleCalendarService;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -137,19 +139,16 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task, GoogleCalendarService $google_calendar_service)
     {
         if(request()->user()->cannot('delete', $task)) {
             abort(403);
         }
         $task->delete();
 
-        //usunięcie wydarznie z kalendarza Google
+        //usunięcie wydarzenie z kalendarza Google
         if($task->google_event_id) {
-            $event = new Event;
-
-            $event = Event::find($task->google_event_id);
-            $event->delete();
+            $google_calendar_service-> deleteEvent($task->google_event_id);
         }
 
         // Wykryj ajax
@@ -184,47 +183,6 @@ class TaskController extends Controller
         ]);
 
         return redirect()->back()->with('link', route('task.show-public', $token->token));
-    }
-
-    public function sendTaskToGoogleCalendar(Task $task)
-    {
-        if(request()->user()->cannot('view', $task)) {
-            abort(403);
-        }
-
-        $task->load('currentVersion');
-
-        //wysłanie danych zadania do kalendarza Google
-        $event = new Event;
-
-        $event->name = config('app.name').': '.$task->currentVersion->title;
-        $event->description = $task->currentVersion->description;
-        $event->startDateTime = Carbon::parse($task->currentVersion->due_date)->startOfDay();
-        $event->endDateTime = Carbon::parse($task->currentVersion->due_date)->endOfDay();
-
-        $googleEvent = $event->save();
-       
-        //zapis id wydarzenia google do zadania
-        $task->google_event_id = $googleEvent->id;
-        $task->save();
-
-        return redirect()->back()->with('success', __('tasks.The task has been attached to the Google Calendar'));
-    }
-
-    public function deleteGoogleCalendarEvent(Task $task)
-    {
-
-        //usunięcie wydarznie z kalendarza Google
-        $event = new Event;
-
-        $event = Event::find($task->google_event_id);
-        $event->delete();
-       
-        //usuniecie id wydarzenia google w zadaniu
-        $task->google_event_id = NULL;
-        $task->save();
-
-        return redirect()->back()->with('success', __('tasks.The task has been removed from Google Calendar'));
     }
 
     //Historia wersji danego zadania

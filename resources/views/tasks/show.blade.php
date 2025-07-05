@@ -21,6 +21,11 @@
                         {{ session('success') }}</a>
                     </div>
                 @endif
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}</a>
+                    </div>
+                @endif
                 @if(session('link'))
                     <div class="alert alert-success">
                         {{ __('tasks.Public link has been generated') }}: <a href="{{ session('link') }}" >{{ session('link') }}</a>
