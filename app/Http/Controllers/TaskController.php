@@ -50,7 +50,7 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $this->validateTask($request);
+        $validated = $this->sanitize($this->validateTask($request));
 
         $task = Task::create(['user_id' => auth()->id()]);
 
@@ -115,7 +115,7 @@ class TaskController extends Controller
             abort(403);
         }
 
-        $validated = $this->validateTask($request);
+        $validated = $this->sanitize($this->validateTask($request));
 
         $version = $task->versions()->create($validated);
 
@@ -189,5 +189,18 @@ class TaskController extends Controller
     public function taskHistory(Task $task)
     {
         return $task->versions()->latest()->get();
+    }
+
+    /**
+     * Oczyszcza dane zadania z potencjalnie niebezpiecznego kodu HTML.
+     *
+     * Usuwa wszystkie znaczniki HTML z pól 'title' i 'description',
+     * aby zapobiec atakom XSS lub przypadkowemu wyświetlaniu formatowania.
+     */
+    private function sanitize(array $data): array
+    {
+        $data['title'] = strip_tags($data['title'] ?? '');
+        $data['description'] = strip_tags($data['description'] ?? '');
+        return $data;
     }
 }
