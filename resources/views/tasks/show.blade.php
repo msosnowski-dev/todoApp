@@ -71,61 +71,64 @@
                         <p class="mb-1"><strong>{{ __('tasks.Deadline for completion') }}:</strong> {{ $task->currentVersion->due_date }}</p>
                         <p class="mb-4"><strong>{{ __('tasks.Task description') }}:</strong> {{ $task->currentVersion->description }}</p>
 
-                        <div class="w-full mt-3">
-                            <h3 class="font-bold mb-2"><span class="mdi mdi-history"></span> {{ __('tasks.Change history') }}</h3>
+                        @if(!$token)
+                            <div class="w-full mt-3">
+                                <h3 class="font-bold mb-2"><span class="mdi mdi-history"></span> {{ __('tasks.Change history') }}</h3>
 
-                            <table class="w-full text-sm text-left rtl:text-right">
+                                <table class="w-full text-sm text-left rtl:text-right">
 
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-right">
-                                            {{ __('Id') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                            {{ __('tasks.Task title') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-center">
-                                            {{ __('tasks.Priority') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-center">
-                                            {{ __('Status') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-right">
-                                            {{ __('tasks.Deadline for completion') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-right">
-                                            {{ __('tasks.Created at') }}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    @foreach($taskHistory as $item)
-                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                                            <th class="px-6 py-4 text-right">
-                                                {{ $item->id }}.
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-right">
+                                                {{ __('Id') }}
                                             </th>
-                                            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                {{ $item->title }}
+                                            <th scope="col" class="px-6 py-3">
+                                                {{ __('tasks.Task title') }}
                                             </th>
-                                            <td class="px-6 py-4 text-center">
-                                                {{ \App\Models\Task::priorities()[$item->priority] }}
-                                            </td>
-                                            <td class="px-6 py-4 text-center">
-                                                {{ \App\Models\Task::statuses()[$item->status] }}
-                                            </td>
-                                            <td class="px-6 py-4 text-right">
-                                                {{ $item->due_date }}
-                                            </td>
-                                            <td class="px-6 py-4 text-right">
-                                                {{ $item->created_at }}
-                                            </td>
+                                            <th scope="col" class="px-6 py-3 text-center">
+                                                {{ __('tasks.Priority') }}
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-center">
+                                                {{ __('Status') }}
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right">
+                                                {{ __('tasks.Deadline for completion') }}
+                                            </th>
+                                            <th scope="col" class="px-6 py-3 text-right">
+                                                {{ __('tasks.Created at') }}
+                                            </th>
                                         </tr>
-                                    @endforeach
-                                    
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach($taskHistory as $item)
+                                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                                                <th class="px-6 py-4 text-right">
+                                                    {{ $item->id }}.
+                                                </th>
+                                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                                    {{ $item->title }}
+                                                </th>
+                                                <td class="px-6 py-4 text-center">
+                                                    {{ \App\Models\Task::priorities()[$item->priority] }}
+                                                </td>
+                                                <td class="px-6 py-4 text-center">
+                                                    {{ \App\Models\Task::statuses()[$item->status] }}
+                                                </td>
+                                                <td class="px-6 py-4 text-right">
+                                                    {{ $item->due_date }}
+                                                </td>
+                                                <td class="px-6 py-4 text-right">
+                                                    {{ $item->created_at }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+
                     </div>
 
                 </div>
