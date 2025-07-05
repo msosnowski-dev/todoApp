@@ -29,7 +29,9 @@ class SendTaskDueDateReminders extends Command
     public function handle()
     {
         $tomorrow = now()->addDay()->startOfDay();
-        $tasks = Task::whereDate('due_date', $tomorrow)->with('user')->get();
+        $tasks = Task::whereHas('currentVersion', function ($q) use ($tomorrow) {
+            $q->whereDate('due_date', $tomorrow);
+        })->with('user')->get();
 
         foreach ($tasks as $task) {
             if ($task->user) {
