@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\PublicTaskToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+
 use Carbon\Carbon;
 use Spatie\GoogleCalendar\Event;
 
@@ -16,20 +17,17 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Task::with('currentVersion')->where('user_id', auth()->id());
-
-        // Filtrowanie
-        if ($request->filled('priority')) {
-            $query->where('priority', $request->priority);
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->filled('due_date')) {
-            $query->whereDate('due_date', $request->due_date);
-        }
+        $query = Task::whereHas('currentVersion', function ($q) use ($request) {
+            if($request->filled('priority')) {
+                $q->where('priority', $request->priority);
+            }
+            if($request->filled('status')) {
+                $q->where('status', $request->status);
+            }
+            if($request->filled('due_date')) {
+                $q->whereDate('due_date', $request->due_date);
+            }
+        })->where('user_id', auth()->id());
 
         // Paginacja
         $tasks = $query->latest()->paginate(5)->withQueryString();
