@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\PublicTaskToken;
 use App\Services\GoogleCalendarService;
+use App\Services\TaskService;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -48,17 +49,13 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, TaskService $taskService)
     {
-        $validated = $this->sanitize($this->validateTask($request));
 
         $task = Task::create(['user_id' => auth()->id()]);
 
         // Tworzymy pierwszą wersję
-        $version = $task->versions()->create($validated);
-
-        // Aktualizujemy task, by wskazywał na aktualną wersję
-        $task->update(['current_version_id' => $version->id]);
+        $taskService->createVersion($task);
 
         return redirect()->route('tasks.index')->with('success', __('tasks.The task has been added.'));
     }
@@ -66,7 +63,7 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Task $task, Request $request)
+    public function show(Task $task, Request $request, TaskService $taskService)
     {
         if($request->token) {
             $token = PublicTaskToken::where('token', $request->token)
@@ -87,7 +84,7 @@ class TaskController extends Controller
 
         $task->load('currentVersion');
 
-        $taskHistory = $this->taskHistory($task);
+        $taskHistory = $taskService->getHistory($task);
 
         return view('tasks.show', compact('task', 'token', 'taskHistory'));
     }
@@ -109,18 +106,14 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, Task $task, TaskService $taskService)
     {
         if($request->user()->cannot('update', $task)) {
             abort(403);
         }
-
-        $validated = $this->sanitize($this->validateTask($request));
-
-        $version = $task->versions()->create($validated);
-
-        $task->update(['current_version_id' => $version->id]);
-
+        
+        $version=$taskService->createVersion($task);
+    
         //Edycja danych wydarzenia w kalendarzu Google
         if($task->google_event_id) {
             $event = Event::find($task->google_event_id);
@@ -160,17 +153,9 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', __('tasks.The task has been deleted.')); 
     }
 
-    private function validateTask(Request $request): array
-    {
-        return $request->validate([
-            'title' => 'bail|required|max:255',
-            'description' => 'nullable',
-            'priority' => 'required|in:low,medium,high',
-            'status' => 'required|in:to-do,in-progress,done',
-            'due_date' => 'required|date|date_format:d.m.Y',
-        ]);
-    }
-
+    /**
+     * Tworzy publiczny link z tokenem do podglądu zadania (wygasa po 1h).
+     */
     public function generatePublicUrl(Task $task)
     {
         if(request()->user()->cannot('view', $task)) {
@@ -183,24 +168,5 @@ class TaskController extends Controller
         ]);
 
         return redirect()->back()->with('link', route('task.show-public', $token->token));
-    }
-
-    //Historia wersji danego zadania
-    public function taskHistory(Task $task)
-    {
-        return $task->versions()->latest()->get();
-    }
-
-    /**
-     * Oczyszcza dane zadania z potencjalnie niebezpiecznego kodu HTML.
-     *
-     * Usuwa wszystkie znaczniki HTML z pól 'title' i 'description',
-     * aby zapobiec atakom XSS lub przypadkowemu wyświetlaniu formatowania.
-     */
-    private function sanitize(array $data): array
-    {
-        $data['title'] = strip_tags($data['title'] ?? '');
-        $data['description'] = strip_tags($data['description'] ?? '');
-        return $data;
     }
 }
