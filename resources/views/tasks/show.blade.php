@@ -107,7 +107,9 @@
                                                     {{ $item->id }}.
                                                 </th>
                                                 <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
-                                                    {{ $item->title }}
+                                                    <div>{{ $item->title }}</div>
+                                                    <div class="text-sm text-gray-600">{{ __('tasks.Task description') }}: {{ $item->description}}</div>
+
                                                 </th>
                                                 <td class="px-6 py-4 text-center">
                                                     {{ \App\Models\Task::priorities()[$item->priority] }}
