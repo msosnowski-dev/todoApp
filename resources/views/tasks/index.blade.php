@@ -23,6 +23,8 @@
                     </div>
                 @endif
 
+                <div id="flash-message" class="" style="display: none"></div>
+
                     <div class="relative overflow-x-auto w-full">
                         <table class="w-full text-sm text-left rtl:text-right">
 
@@ -121,6 +123,9 @@
                                             <div class="mt-2">
                                                 <button class="mdi mdi-trash-can-outline text-red-500 hover:underline delete-task" data-id="{{ $task->id }}">{{ __('Delete') }} [Ajax]</button>
                                             </div>
+                                            <div class="mt-2">
+                                                <button class="mdi mdi-trash-can-outline text-red-500 hover:underline delete-task-rest" data-id="{{ $task->id }}">{{ __('Delete') }} [Ajax - REST API]</button>
+                                            </div>
 
                                         </td>
                                     </tr>
@@ -141,9 +146,16 @@
     </div>
 
     <script>
+        function showFlashMessage(message, type='danger') {
+            const flash = document.getElementById('flash-message');
+            flash.textContent = message;
+            flash.classList.add('alert');
+            flash.classList.add('alert-'+type);
+            flash.style.display = 'block';
+        }
         document.querySelectorAll('.delete-task').forEach(btn => {
             btn.addEventListener('click', function () {
-                if (!confirm('Na pewno usunąć zadanie?')) return;
+                if (!confirm("{{ __('tasks.Are you sure you want to delete the task?') }}")) return;
 
                 const taskId = this.dataset.id;
 
@@ -152,6 +164,33 @@
                     if (response.status === 200) {
                         location.reload();
                     }
+                });
+            });
+        });
+
+        document.querySelectorAll('.delete-task-rest').forEach(btn => {
+            btn.addEventListener('click', function () {
+                if (!confirm("{{ __('tasks.Are you sure you want to delete the task?') }}")) return;
+
+                axios.defaults.headers.common['Authorization'] = 'Bearer {{ session("api-token") }}';
+
+                const taskId = this.dataset.id;
+
+                axios.delete(`/api/tasks/${taskId}`)
+                .then(response => {
+                    if (response.status === 200) {
+                        showFlashMessage(response.data.message, 'success');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    }
+                }).catch(error => {
+                    if (error.response && error.response.status === 403) {
+                        showFlashMessage(error.response.data.message);
+                    } else {
+                        alert("{{__('tasks.An error occurred') }}");
+                    }
+                    console.error(error);
                 });
             });
         });
