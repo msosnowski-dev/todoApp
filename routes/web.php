@@ -19,10 +19,12 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('tasks', TaskController::class);
     Route::get('/task/{task}/generate-url', [TaskController::class, 'generatePublicUrl'])->name('task.generate-url');
-    Route::get('/task/{token}', [TaskController::class, 'show'])->name('task.show-public');
+    Route::get('/task/{token}', [TaskController::class, 'show'])->name('task.show');
     Route::post('/task/{task}/send-task-google-calendar', [GoogleCalendarController::class, 'sendTaskToGoogleCalendar'])->name('task.send-task-google-calendar');
     Route::delete('/task/{task}/delete-google-calendar-event', [GoogleCalendarController::class, 'deleteGoogleCalendarEvent'])->name('task.delete-google-calendar-event');
 
 });
+
+Route::get('/public-task/{token}', [TaskController::class, 'show'])->name('task.show-public');
 
 require __DIR__.'/auth.php';

@@ -73,6 +73,11 @@ class TaskController extends Controller
             if(!$token) abort(403);
 
             $task = $token->task;
+
+            if($request->routeIs('task.show-public'))
+                $set_view = 'tasks.show-public';
+            else
+                $set_view = 'tasks.show';
             
         } else {
             if(request()->user()->cannot('view', $task)) {
@@ -80,13 +85,14 @@ class TaskController extends Controller
             }
 
             $token = null;
+            $set_view = 'tasks.show';
         }
 
         $task->load('currentVersion');
 
         $taskHistory = $taskService->getHistory($task);
-
-        return view('tasks.show', compact('task', 'token', 'taskHistory'));
+        
+        return view($set_view, compact('task', 'token', 'taskHistory'));
     }
 
     /**
@@ -167,6 +173,6 @@ class TaskController extends Controller
             'expires_at' => Carbon::now()->addHour(),
         ]);
 
-        return redirect()->back()->with('link', route('task.show-public', $token->token));
+        return redirect()->back()->with(['link-public'=> route('task.show-public', $token->token), 'link-logged'=> route('task.show', $token->token)]);
     }
 }

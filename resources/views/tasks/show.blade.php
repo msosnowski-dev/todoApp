@@ -26,9 +26,11 @@
                         {{ session('error') }}</a>
                     </div>
                 @endif
-                @if(session('link'))
+                @if(session('link-public'))
                     <div class="alert alert-success">
-                        {{ __('tasks.Public link has been generated') }}: <a href="{{ session('link') }}" >{{ session('link') }}</a>
+                        <div>{{ __('tasks.Public link has been generated') }}: </div>
+                        <div class="mt-3">{{ __('tasks.Public') }}: <a href="{{ session('link') }}" >{{ session('link-public') }}</a></div>
+                        <div class="">{{ __('tasks.Public for logged in users') }}: <a href="{{ session('link') }}" >{{ session('link-logged') }}</a></div>
                     </div>
                 @endif
 
@@ -65,11 +67,7 @@
                             @endif
                         </div>
 
-                        <h2 class="text-xl font-bold mb-2">{{ $task->currentVersion->title }}</h2>
-                        <p class="mb-1"><strong>{{ __('Status') }}:</strong> {{ \App\Models\Task::statuses()[$task->currentVersion->status] }}</p>
-                        <p class="mb-1"><strong>{{ __('tasks.Priority') }}:</strong> {{ \App\Models\Task::priorities()[$task->currentVersion->priority] }}</p>
-                        <p class="mb-1"><strong>{{ __('tasks.Deadline for completion') }}:</strong> {{ $task->currentVersion->due_date }}</p>
-                        <p class="mb-4"><strong>{{ __('tasks.Task description') }}:</strong> {{ $task->currentVersion->description }}</p>
+                        @include('tasks.partials.task-show-data')
 
                         @if(!$token)
                             <div class="w-full mt-3">

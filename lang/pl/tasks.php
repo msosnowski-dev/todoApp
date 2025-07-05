@@ -42,4 +42,6 @@ return [
     'Change history'            => 'Historia zmian',
     'Created at'                => 'Data utworzenia',
     'Google Calendar credentials file is missing.'                => 'Brakuje pliku z poświadczeniami Google Calendar.',
+    'Public'                    => 'Publiczny',
+    'Public for logged in users'=> 'Publiczny dla zalogowanych',
 ];
