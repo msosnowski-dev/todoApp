@@ -47,4 +47,7 @@ return [
     'You do not have permission to delete the task.'    => 'Brak uprawnień do usunięcia zadania.',
     'An error occurred'         => 'Wystąpił błąd',
     'Are you sure you want to delete the task?'         => 'Na pewno usunąć zadanie?',
+    'Google Calendar API has not been activated in Google Cloud Console.'         => 'Google Calendar API nie zostało aktywowane w Google Cloud Console.',
+    'Activate it to be able to create events.'         => 'Aktywuj je, aby móc tworzyć wydarzenia.',
+    'An error occurred during integration with Google Calendar.'         => 'Wystąpił błąd podczas integracji z Google Calendar.',
 ];

@@ -31,20 +31,31 @@ class GoogleCalendarController extends Controller
         }
 
         // Utworzenie wydarzenia na podstawie aktualnej wersji zadania
-        $event = new Event;
-        $event->name = config('app.name').': '.$task->currentVersion->title;
-        $event->description = $task->currentVersion->description;
-        $event->startDateTime = Carbon::parse($task->currentVersion->due_date)->startOfDay();
-        $event->endDateTime = Carbon::parse($task->currentVersion->due_date)->endOfDay();
+        try {
+            
+            $event = new Event;
+            $event->name = config('app.name').': '.$task->currentVersion->title;
+            $event->description = $task->currentVersion->description;
+            $event->startDateTime = Carbon::parse($task->currentVersion->due_date)->startOfDay();
+            $event->endDateTime = Carbon::parse($task->currentVersion->due_date)->endOfDay();
 
-        // Zapis do Google Calendar
-        $googleEvent = $event->save();
-       
-        // Zapisz ID wydarzenia w bazie
-        $task->google_event_id = $googleEvent->id;
-        $task->save();
+            // Zapis do Google Calendar
+            $googleEvent = $event->save();
+        
 
-        return redirect()->back()->with('success', __('tasks.The task has been attached to the Google Calendar'));
+            // Zapisz ID wydarzenia w bazie
+            $task->google_event_id = $googleEvent->id;
+            $task->save();
+
+            return redirect()->back()->with('success', __('tasks.The task has been attached to the Google Calendar'));
+
+        } catch (\Google\Service\Exception $e) {
+            if (str_contains($e->getMessage(), 'API has not been used')) {
+                return back()->with('error', __('tasks.Google Calendar API has not been activated in Google Cloud Console.').' '.__('tasks.Activate it to be able to create events.'));
+            }
+
+            return back()->with('error', __('tasks.An error occurred during integration with Google Calendar.'));
+        }
     }
 
     /**
