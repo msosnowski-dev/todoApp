@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         //Generowanie tokenu dla rządań API
-        $request->user()->token();
+        $request->user()->generateApiToken();
 
         return redirect()->intended(route('tasks.index', absolute: false));
     }

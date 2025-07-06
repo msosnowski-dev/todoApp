@@ -45,6 +45,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        //Generowanie tokenu dla rządań API
+        $user->generateApiToken();
+
         return redirect(route('dashboard', absolute: false));
     }
 }
