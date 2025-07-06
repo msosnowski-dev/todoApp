@@ -25,10 +25,20 @@ Aplikacja To-Do napisana w Laravel 11 z:
 
 ```bash
 git clone https://github.com/msosnowski-dev/todoApp.git
+```
+```bash
 cd todoApp
+```
+```bash
 composer install
+```
+```bash
 npm install && npm run build
+```
+```bash
 cp .env.example .env
+```
+```bash
 php artisan key:generate
 ```
 
@@ -72,6 +82,8 @@ DB_PASSWORD=root
 
 ```bash
 php artisan optimize
+```
+```bash
 php artisan migrate
 ```
 
@@ -178,10 +190,20 @@ docker-compose up -d --build
 
 ```bash
 docker-compose exec app chmod -R 775 bootstrap/cache
+```
+```bash
 docker-compose exec app chmod -R 775 storage
+```
+```bash
 docker-compose exec app php artisan config:clear
+```
+```bash
 docker-compose exec app php artisan cache:clear
+```
+```bash
 docker-compose exec app php artisan view:clear
+```
+```bash
 docker-compose exec app php artisan serve
 ```
 
@@ -195,6 +217,8 @@ http://127.0.0.1:8000
 
 ```bash
 docker-compose exec app php artisan queue:work
+```
+```bash
 docker-compose exec app php artisan tasks:send-reminders
 ```
 
