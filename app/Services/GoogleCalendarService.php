@@ -10,15 +10,18 @@ class GoogleCalendarService
     /**
      * Usuń wydarzenie z Google Calendar na podstawie jego ID.
      */
-    public function deleteEvent(string $eventId): bool
+    public function deleteEvent(string $eventId)
     {
         $event = Event::find($eventId);
 
-        if (!$event) {
+
+        if($event->status === 'confirmed') {
+            $event->delete();
+        } else {
             return false;
         }
+            
 
-        $event->delete();
 
         return true;
     }

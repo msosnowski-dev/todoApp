@@ -69,7 +69,9 @@ class GoogleCalendarController extends Controller
         }
 
         // Usuń wydarzenie z kalendarza
-        $google_calendar_service->deleteEvent($task->google_event_id);
+        if(!$google_calendar_service->deleteEvent($task->google_event_id)) {
+            return redirect()->back()->with('error', __('tasks.The event has already been deleted directly in Google Calendar'));
+        }
 
         // Usuń powiązanie w bazie
         $task->google_event_id = null;

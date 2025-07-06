@@ -90,6 +90,15 @@ class TaskController extends Controller
 
         $task->load('currentVersion');
 
+        // Sprawdzenie, czy wydarzenie zostało usunięte bezpośrednio w Google Calendar, poprzez porównanie lokalnej bazy z aktualnym stanem wydarzeń w kalendarzu Google.
+        if($task->google_event_id) {
+            $event = Event::find($task->google_event_id);
+            if($event->status === 'cancelled') {
+                $task->google_event_id = null;
+                $task->save();
+            }
+        }
+
         $taskHistory = $taskService->getHistory($task);
         
         return view($set_view, compact('task', 'token', 'taskHistory'));

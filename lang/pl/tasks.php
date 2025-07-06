@@ -50,4 +50,5 @@ return [
     'Google Calendar API has not been activated in Google Cloud Console.'         => 'Google Calendar API nie zostało aktywowane w Google Cloud Console.',
     'Activate it to be able to create events.'         => 'Aktywuj je, aby móc tworzyć wydarzenia.',
     'An error occurred during integration with Google Calendar.'         => 'Wystąpił błąd podczas integracji z Google Calendar.',
+    'The event has already been deleted directly in Google Calendar'         => 'Wydarzenie zostało już usunięte bezpośrednio w kalendarzu Google',
 ];
